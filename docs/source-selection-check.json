@@ -1,0 +1,101 @@
+{
+  "method": "AI selects an ID; application copies a source sentence without rewriting",
+  "scope": "Exact source preservation and anchor checks, not a proof of document truth or representative selection",
+  "model": "Qwen3-0.6B-Q4_K_M",
+  "process_tree_limit_mb": 2048,
+  "result_cache": false,
+  "all_exact_source_matches": true,
+  "results": [
+    {
+      "case": "meeting",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다.",
+      "anchor": "줄 13",
+      "exact_source_match": true,
+      "model_response": "2",
+      "candidates": 5,
+      "elapsed_seconds": 2.959,
+      "model_peak_rss_mb": 573.36,
+      "generated_tokens": 2
+    },
+    {
+      "case": "metrics",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+      "anchor": "줄 9",
+      "exact_source_match": true,
+      "model_response": "1",
+      "candidates": 6,
+      "elapsed_seconds": 3.05,
+      "model_peak_rss_mb": 571.32,
+      "generated_tokens": 2
+    },
+    {
+      "case": "product_brief",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "The final section must remain represented in the summary.",
+      "anchor": "p. 4",
+      "exact_source_match": true,
+      "model_response": "1",
+      "candidates": 8,
+      "elapsed_seconds": 3.066,
+      "model_peak_rss_mb": 570.88,
+      "generated_tokens": 2
+    },
+    {
+      "case": "privacy",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "사용자가 직접 승인한 파일만 공유하고, 나머지 문서는 로컬 저장소에 보관합니다.",
+      "anchor": "줄 7",
+      "exact_source_match": true,
+      "model_response": "1",
+      "candidates": 3,
+      "elapsed_seconds": 2.488,
+      "model_peak_rss_mb": 570.84,
+      "generated_tokens": 2
+    },
+    {
+      "case": "streaming",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "문서를 64KB 버퍼로 나누어 읽는 스트리밍 방식을 사용합니다.",
+      "anchor": "줄 7",
+      "exact_source_match": true,
+      "model_response": "1",
+      "candidates": 4,
+      "elapsed_seconds": 2.7,
+      "model_peak_rss_mb": 571.57,
+      "generated_tokens": 2
+    },
+    {
+      "case": "pilot",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "The team approved a local-only pilot for 20 users to evaluate document search.",
+      "anchor": "줄 7",
+      "exact_source_match": true,
+      "model_response": "1",
+      "candidates": 3,
+      "elapsed_seconds": 2.219,
+      "model_peak_rss_mb": 570.73,
+      "generated_tokens": 2
+    },
+    {
+      "case": "incident",
+      "mode": "ai",
+      "method": "ai_source_selection",
+      "sentence": "The failures were caused by a full temporary disk, not a network outage.",
+      "anchor": "줄 7",
+      "exact_source_match": true,
+      "model_response": "1",
+      "candidates": 4,
+      "elapsed_seconds": 2.284,
+      "model_peak_rss_mb": 572.76,
+      "generated_tokens": 2
+    }
+  ]
+}

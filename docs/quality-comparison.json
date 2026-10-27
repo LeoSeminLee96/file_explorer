@@ -1,0 +1,206 @@
+{
+  "method": "Seven synthetic cases; keyword checks are diagnostics, not a semantic accuracy score",
+  "cpu_threads": 2,
+  "memory_ceiling_mb": 2048,
+  "result_cache": false,
+  "results": [
+    {
+      "model_config": ".data/model.json",
+      "case": "meeting",
+      "elapsed": 3.904,
+      "mode": "ai",
+      "summary": "첫 번째 배포에서는 파일 탐색, 이름 검색 및 문서 미리보기를 우선 제공합니다.",
+      "draft": "핵심 근거: 첫 번째 배포에서는 파일 탐색, 이름 검색 및 문서 미리보기를 우선 제공합니다.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 573.546875,
+      "error": null
+    },
+    {
+      "model_config": ".data/model.json",
+      "case": "metrics",
+      "elapsed": 3.793,
+      "mode": "ai",
+      "summary": "분기 동안 문서 처리 건수가 25% 증가하며, 평균 검토 시간 감소했습니다.",
+      "draft": "핵심 근거: 분기 동안 문서 처리 건수가 25% 증가하며, 평균 검토 시간 감소했습니다.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 573.0078125,
+      "error": null
+    },
+    {
+      "model_config": ".data/model.json",
+      "case": "product_brief",
+      "elapsed": 3.275,
+      "mode": "ai",
+      "summary": "The parser processes pages in isolation with a 256 MB limit, ensuring isolated execution and representation of the final section.",
+      "draft": "The parser processes pages in isolation with a 256 MB limit, ensuring isolated execution and representation of the final section.",
+      "topic_checks": [
+        false,
+        false
+      ],
+      "peak_model_rss_mb": 572.8515625,
+      "error": null
+    },
+    {
+      "model_config": ".data/model.json",
+      "case": "privacy",
+      "elapsed": 3.631,
+      "mode": "ai",
+      "summary": "자동 업로드는 도입되지 않습니다; 사용자는 직접 승인한 파일만 공유하고, 나머지는 로컬 저장소에 올립니다.",
+      "draft": "자동 업로드는 도입되지 않습니다; 사용자는 직접 승인한 파일만 공유하고, 나머지는 로컬 저장소에 올립니다.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 634.65234375,
+      "error": null
+    },
+    {
+      "model_config": ".data/model.json",
+      "case": "streaming",
+      "elapsed": 3.485,
+      "mode": "ai",
+      "summary": "이 문서 처리 방식은 64KB 버퍼로 스트리밍하여 메모리에 직접 저장하지 않고 작업 중입니다.",
+      "draft": "이 문서 처리 방식은 64KB 버퍼로 스트리밍하여 메모리에 직접 저장하지 않고 작업 중입니다.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 572.609375,
+      "error": null
+    },
+    {
+      "model_config": ".data/model.json",
+      "case": "pilot",
+      "elapsed": 2.551,
+      "mode": "ai",
+      "summary": "The cloud migration was rejected and a local-only pilot for 20 users has been approved.",
+      "draft": "The cloud migration was rejected and a local-only pilot for 20 users has been approved.",
+      "topic_checks": [
+        true,
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 572.6875,
+      "error": null
+    },
+    {
+      "model_config": ".data/model.json",
+      "case": "incident",
+      "elapsed": 2.7,
+      "mode": "extractive_fallback",
+      "summary": "The team will add a temporary storage usage check before starting extraction.",
+      "draft": "The incident was caused by a full temporary disk instead of a network outage, with cleanup and file browsing restored.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 572.66796875,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "meeting",
+      "elapsed": 4.797,
+      "mode": "ai",
+      "summary": "최초 배포 시 파일 탐색 및 이름 검색과 본문 검색으로 우선 수행되며 네트워크 연결 없이 원문 추출 구현됩니다.",
+      "draft": "최초 배포 시 파일 탐색 및 이름 검색과 본문 검색으로 우선 수행되며 네트워크 연결 없이 원문 추출 구현됩니다.",
+      "topic_checks": [
+        true,
+        false
+      ],
+      "peak_model_rss_mb": 717.64453125,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "metrics",
+      "elapsed": 5.546,
+      "mode": "extractive_fallback",
+      "summary": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+      "draft": "본 문서로 인한 25% 증가된 처리 건수와 평균 4분 감소된 검토 시간은 본 문서의 근거로 설명될 수 있으나, 실제 기업의 재무 자료가 아닌 가상 운영 보고서임을 명시하고 추측하지 마세요.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 717.796875,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "product_brief",
+      "elapsed": 4.761,
+      "mode": "extractive_fallback",
+      "summary": "The final section must remain represented in the summary.",
+      "draft": "The document contains 30 pages of data processed sequentially on an isolated device with a 256MB ceiling limit.",
+      "topic_checks": [
+        false,
+        false
+      ],
+      "peak_model_rss_mb": 717.453125,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "privacy",
+      "elapsed": 4.47,
+      "mode": "extractive_fallback",
+      "summary": "사용자가 직접 승인한 파일만 공유하고, 나머지 문서는 로컬 저장소에 보관합니다.",
+      "draft": "파일 공유 정책은 자동 업로드를 금지하여 사용자의 승인을 기반으로 수동으로 파일만 전송하고 로컬 저장소로 데이터를 보관하도록 정제했습니다.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 716.68359375,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "streaming",
+      "elapsed": 4.792,
+      "mode": "ai",
+      "summary": "문서를 64KB 버퍼로 나누어 읽을 스트리밍 방식으로 처리하여 즉시 해제하고 파일 전체 텍스트를 메모리로 보관하지 않는 설계가 필요합니다.",
+      "draft": "문서를 64KB 버퍼로 나누어 읽을 스트리밍 방식으로 처리하여 즉시 해제하고 파일 전체 텍스트를 메모리로 보관하지 않는 설계가 필요합니다.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 717.26953125,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "pilot",
+      "elapsed": 3.999,
+      "mode": "ai",
+      "summary": "The team is rejecting cloud migration and approving a local-only pilot with 20 users to evaluate document search before allowing production rollout.",
+      "draft": "The team is rejecting cloud migration and approving a local-only pilot with 20 users to evaluate document search before allowing production rollout.",
+      "topic_checks": [
+        true,
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 717.78515625,
+      "error": null
+    },
+    {
+      "model_config": ".data/model-candidate.json",
+      "case": "incident",
+      "elapsed": 4.46,
+      "mode": "ai",
+      "summary": "The team will add a temporary storage usage check before starting extraction to prevent extraction failures due to full disk space issues and read-only file browsing remains active.",
+      "draft": "The team will add a temporary storage usage check before starting extraction to prevent extraction failures due to full disk space issues and read-only file browsing remains active.",
+      "topic_checks": [
+        true,
+        true
+      ],
+      "peak_model_rss_mb": 813.53125,
+      "error": null
+    }
+  ]
+}

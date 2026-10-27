@@ -1,0 +1,150 @@
+{
+  "model": "Qwen3.5-0.8B-Q4_0",
+  "cpu_threads": 2,
+  "context": 2048,
+  "process_tree_limit_mb": 2048,
+  "summary_cache": false,
+  "results": [
+    {
+      "filename": "02_제품_기획_회의.md",
+      "elapsed_seconds": 4.8173995,
+      "result": {
+        "event": "ai_summary",
+        "bullets": [
+          {
+            "section": "한 줄 요약",
+            "anchor": "줄 13",
+            "text": "최초 배포 시 파일 탐색 및 이름 검색과 본문 검색으로 우선 수행되며 네트워크 연결 없이 원문 추출 구현됩니다.",
+            "evidence": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다. 기본 요약은 네트워크 연결 없이 원문을 발췌하는 방식으로 구현합니다.\n호환성 목표는 RAM 4GB 이하의 컴퓨터입니다. 문서 파서는 한 번에 1개만 실행하고, 미리보기는 최대 24,000자로 제한합니다. 파일 수가 늘어나도 화면에는 한 번에 160개 항목만 표시합니다.",
+            "facts": {
+              "numbers_dates": [],
+              "names": []
+            },
+            "origin": "ai"
+          }
+        ],
+        "summary_text": "최초 배포 시 파일 탐색 및 이름 검색과 본문 검색으로 우선 수행되며 네트워크 연결 없이 원문 추출 구현됩니다.",
+        "model_id": "Qwen3.5-0.8B-Q4_0",
+        "model_version": "807dfd9a6fadbf703207aac3bfb0b2b3040d077c",
+        "input_tokens": 254,
+        "generated_tokens": 26,
+        "inference_seconds": 3.167737,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 254,
+          "prompt_ms": 2317.53,
+          "prompt_per_token_ms": 9.124133858267717,
+          "prompt_per_second": 109.59944423588907,
+          "predicted_n": 26,
+          "predicted_ms": 845.955,
+          "predicted_per_token_ms": 33.8382,
+          "predicted_per_second": 29.552399359303983
+        },
+        "rejected_claims": 0,
+        "source_supplements": 0,
+        "evidence_sections": 2,
+        "mode": "ai",
+        "model_peak_rss_mb": 717.140625,
+        "model_loaded_on_request": true,
+        "result_cache": false,
+        "draft_for_validation": "최초 배포 시 파일 탐색 및 이름 검색과 본문 검색으로 우선 수행되며 네트워크 연결 없이 원문 추출 구현됩니다.",
+        "total_ai_seconds": 4.545873500000001
+      }
+    },
+    {
+      "filename": "03_분기_운영_보고서.txt",
+      "elapsed_seconds": 5.767451200000001,
+      "result": {
+        "event": "ai_summary",
+        "bullets": [
+          {
+            "section": "문단 9",
+            "anchor": "줄 9",
+            "text": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+            "facts": {
+              "numbers_dates": [
+                "1,000개",
+                "25%"
+              ],
+              "names": []
+            },
+            "origin": "extractive"
+          }
+        ],
+        "summary_text": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+        "model_id": "Qwen3.5-0.8B-Q4_0",
+        "model_version": "807dfd9a6fadbf703207aac3bfb0b2b3040d077c",
+        "input_tokens": 249,
+        "generated_tokens": 50,
+        "inference_seconds": 4.1012685,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 249,
+          "prompt_ms": 2297.113,
+          "prompt_per_token_ms": 9.225353413654618,
+          "prompt_per_second": 108.39693127852222,
+          "predicted_n": 50,
+          "predicted_ms": 1800.139,
+          "predicted_per_token_ms": 36.737530612244896,
+          "predicted_per_second": 27.220120224049367
+        },
+        "rejected_claims": 1,
+        "source_supplements": 1,
+        "evidence_sections": 2,
+        "mode": "extractive_fallback",
+        "model_peak_rss_mb": 717.328125,
+        "model_loaded_on_request": true,
+        "result_cache": false,
+        "draft_for_validation": "본 문서로 인한 25% 증가된 처리 건수와 평균 4분 감소된 검토 시간은 본 문서의 근거로 설명될 수 있으나, 실제 기업의 재무 자료가 아닌 가상 운영 보고서임을 명시하고 추측하지 마세요.",
+        "total_ai_seconds": 5.4906108
+      }
+    },
+    {
+      "filename": "06_Product_Brief.pdf",
+      "elapsed_seconds": 5.018493999999999,
+      "result": {
+        "event": "ai_summary",
+        "bullets": [
+          {
+            "section": "페이지 4",
+            "anchor": "p. 4",
+            "text": "The final section must remain represented in the summary.",
+            "facts": {
+              "numbers_dates": [],
+              "names": [
+                "The"
+              ]
+            },
+            "origin": "extractive"
+          }
+        ],
+        "summary_text": "The final section must remain represented in the summary.",
+        "model_id": "Qwen3.5-0.8B-Q4_0",
+        "model_version": "807dfd9a6fadbf703207aac3bfb0b2b3040d077c",
+        "input_tokens": 236,
+        "generated_tokens": 26,
+        "inference_seconds": 3.1083814000000003,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 236,
+          "prompt_ms": 2228.832,
+          "prompt_per_token_ms": 9.444203389830507,
+          "prompt_per_second": 105.88505549094774,
+          "predicted_n": 26,
+          "predicted_ms": 875.832,
+          "predicted_per_token_ms": 35.03328,
+          "predicted_per_second": 28.544287032216225
+        },
+        "rejected_claims": 1,
+        "source_supplements": 1,
+        "evidence_sections": 2,
+        "mode": "extractive_fallback",
+        "model_peak_rss_mb": 716.95703125,
+        "model_loaded_on_request": true,
+        "result_cache": false,
+        "draft_for_validation": "The document contains 30 pages of data processed sequentially on an isolated device with a 256MB ceiling limit.",
+        "total_ai_seconds": 4.6661038
+      }
+    }
+  ]
+}

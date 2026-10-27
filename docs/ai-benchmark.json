@@ -1,0 +1,353 @@
+{
+  "model": "Qwen3-0.6B-Q4_K_M",
+  "cpu_threads": 2,
+  "context": 2048,
+  "process_tree_limit_mb": 2048,
+  "summary_cache": false,
+  "results": [
+    {
+      "filename": "02_제품_기획_회의.md",
+      "elapsed_seconds": 3.1069114,
+      "result": {
+        "event": "ai_summary",
+        "bullets": [
+          {
+            "section": "주요 결정",
+            "anchor": "줄 13",
+            "text": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다.",
+            "evidence": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다. 기본 요약은 네트워크 연결 없이 원문을 발췌하는 방식으로 구현합니다.",
+            "sentence_index": 1,
+            "source_start": 0,
+            "selection_score": 14.879999999999999,
+            "origin": "ai_selected",
+            "selected_sentence_id": 2,
+            "facts": {
+              "numbers_dates": [],
+              "names": []
+            },
+            "verification": "source_sentence"
+          }
+        ],
+        "summary_text": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다.",
+        "model_id": "Qwen3-0.6B-Q4_K_M",
+        "model_version": "23749fefcc72300e3a2ad315e1317431b06b590a",
+        "input_tokens": 310,
+        "generated_tokens": 2,
+        "inference_seconds": 1.8078145,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 310,
+          "prompt_ms": 1781.641,
+          "prompt_per_token_ms": 5.747229032258065,
+          "prompt_per_second": 173.9968938748042,
+          "predicted_n": 2,
+          "predicted_ms": 23.281,
+          "predicted_per_token_ms": 23.281,
+          "predicted_per_second": 42.953481379665824
+        },
+        "rejected_claims": 0,
+        "source_supplements": 0,
+        "evidence_sections": 2,
+        "candidate_count": 5,
+        "mode": "ai",
+        "summary_method": "ai_source_selection",
+        "verification": "source_sentence",
+        "model_peak_rss_mb": 571.0234375,
+        "model_loaded_on_request": true,
+        "result_cache": false,
+        "draft_for_validation": "2",
+        "candidate_sentences": [
+          {
+            "section": "주요 결정",
+            "anchor": "줄 13",
+            "text": "기본 요약은 네트워크 연결 없이 원문을 발췌하는 방식으로 구현합니다.",
+            "evidence": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다. 기본 요약은 네트워크 연결 없이 원문을 발췌하는 방식으로 구현합니다.",
+            "sentence_index": 2,
+            "source_start": 51,
+            "selection_score": 16.759999999999998
+          },
+          {
+            "section": "주요 결정",
+            "anchor": "줄 13",
+            "text": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다.",
+            "evidence": "첫 번째 배포에서는 파일 탐색, 이름 검색, 본문 검색과 문서 미리보기를 우선 제공합니다. 기본 요약은 네트워크 연결 없이 원문을 발췌하는 방식으로 구현합니다.",
+            "sentence_index": 1,
+            "source_start": 0,
+            "selection_score": 14.879999999999999
+          },
+          {
+            "section": "성능 기준",
+            "anchor": "줄 17",
+            "text": "호환성 목표는 RAM 4GB 이하의 컴퓨터입니다.",
+            "evidence": "호환성 목표는 RAM 4GB 이하의 컴퓨터입니다. 문서 파서는 한 번에 1개만 실행하고, 미리보기는 최대 24,000자로 제한합니다. 파일 수가 늘어나도 화면에는 한 번에 160개 항목만 표시합니다.",
+            "sentence_index": 1,
+            "source_start": 0,
+            "selection_score": 5.14
+          },
+          {
+            "section": "성능 기준",
+            "anchor": "줄 17",
+            "text": "문서 파서는 한 번에 1개만 실행하고, 미리보기는 최대 24,000자로 제한합니다.",
+            "evidence": "호환성 목표는 RAM 4GB 이하의 컴퓨터입니다. 문서 파서는 한 번에 1개만 실행하고, 미리보기는 최대 24,000자로 제한합니다. 파일 수가 늘어나도 화면에는 한 번에 160개 항목만 표시합니다.",
+            "sentence_index": 2,
+            "source_start": 28,
+            "selection_score": 3.63
+          },
+          {
+            "section": "성능 기준",
+            "anchor": "줄 17",
+            "text": "파일 수가 늘어나도 화면에는 한 번에 160개 항목만 표시합니다.",
+            "evidence": "호환성 목표는 RAM 4GB 이하의 컴퓨터입니다. 문서 파서는 한 번에 1개만 실행하고, 미리보기는 최대 24,000자로 제한합니다. 파일 수가 늘어나도 화면에는 한 번에 160개 항목만 표시합니다.",
+            "sentence_index": 3,
+            "source_start": 75,
+            "selection_score": 3.2299999999999995
+          }
+        ],
+        "total_ai_seconds": 2.8695666
+      }
+    },
+    {
+      "filename": "03_분기_운영_보고서.txt",
+      "elapsed_seconds": 3.0298845000000005,
+      "result": {
+        "event": "ai_summary",
+        "bullets": [
+          {
+            "section": "문단 9",
+            "anchor": "줄 9",
+            "text": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+            "evidence": "분기 동안 검토한 문서는 1,250개입니다. 전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다. 평균 검토 시간은 18분에서 12분으로 감소했습니다.",
+            "sentence_index": 2,
+            "source_start": 25,
+            "selection_score": 5.92,
+            "origin": "ai_selected",
+            "selected_sentence_id": 1,
+            "facts": {
+              "numbers_dates": [
+                "1,000개",
+                "25%"
+              ],
+              "names": []
+            },
+            "verification": "source_sentence"
+          }
+        ],
+        "summary_text": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+        "model_id": "Qwen3-0.6B-Q4_K_M",
+        "model_version": "23749fefcc72300e3a2ad315e1317431b06b590a",
+        "input_tokens": 310,
+        "generated_tokens": 2,
+        "inference_seconds": 1.8398613,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 310,
+          "prompt_ms": 1814.403,
+          "prompt_per_token_ms": 5.852912903225807,
+          "prompt_per_second": 170.85509669020607,
+          "predicted_n": 2,
+          "predicted_ms": 22.785,
+          "predicted_per_token_ms": 22.785,
+          "predicted_per_second": 43.88852315119596
+        },
+        "rejected_claims": 0,
+        "source_supplements": 0,
+        "evidence_sections": 2,
+        "candidate_count": 6,
+        "mode": "ai",
+        "summary_method": "ai_source_selection",
+        "verification": "source_sentence",
+        "model_peak_rss_mb": 570.7421875,
+        "model_loaded_on_request": true,
+        "result_cache": false,
+        "draft_for_validation": "1",
+        "candidate_sentences": [
+          {
+            "section": "문단 9",
+            "anchor": "줄 9",
+            "text": "전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다.",
+            "evidence": "분기 동안 검토한 문서는 1,250개입니다. 전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다. 평균 검토 시간은 18분에서 12분으로 감소했습니다.",
+            "sentence_index": 2,
+            "source_start": 25,
+            "selection_score": 5.92
+          },
+          {
+            "section": "문단 9",
+            "anchor": "줄 9",
+            "text": "평균 검토 시간은 18분에서 12분으로 감소했습니다.",
+            "evidence": "분기 동안 검토한 문서는 1,250개입니다. 전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다. 평균 검토 시간은 18분에서 12분으로 감소했습니다.",
+            "sentence_index": 3,
+            "source_start": 62,
+            "selection_score": 5.85
+          },
+          {
+            "section": "문단 9",
+            "anchor": "줄 9",
+            "text": "분기 동안 검토한 문서는 1,250개입니다.",
+            "evidence": "분기 동안 검토한 문서는 1,250개입니다. 전 분기 1,000개와 비교하여 처리 건수가 25% 증가했습니다. 평균 검토 시간은 18분에서 12분으로 감소했습니다.",
+            "sentence_index": 1,
+            "source_start": 0,
+            "selection_score": 3.5
+          },
+          {
+            "section": "문단 5",
+            "anchor": "줄 5",
+            "text": "2026년 3분기 동안 문서 처리 업무의 변화를 정리했습니다.",
+            "evidence": "이 문서는 기능 확인을 위해 만든 가상 운영 보고서입니다. 실제 기업의 재무 자료가 아닙니다. 2026년 3분기 동안 문서 처리 업무의 변화를 정리했습니다.",
+            "sentence_index": 3,
+            "source_start": 53,
+            "selection_score": 1.88
+          },
+          {
+            "section": "문단 5",
+            "anchor": "줄 5",
+            "text": "이 문서는 기능 확인을 위해 만든 가상 운영 보고서입니다.",
+            "evidence": "이 문서는 기능 확인을 위해 만든 가상 운영 보고서입니다. 실제 기업의 재무 자료가 아닙니다. 2026년 3분기 동안 문서 처리 업무의 변화를 정리했습니다.",
+            "sentence_index": 1,
+            "source_start": 0,
+            "selection_score": 1.26
+          },
+          {
+            "section": "문단 5",
+            "anchor": "줄 5",
+            "text": "실제 기업의 재무 자료가 아닙니다.",
+            "evidence": "이 문서는 기능 확인을 위해 만든 가상 운영 보고서입니다. 실제 기업의 재무 자료가 아닙니다. 2026년 3분기 동안 문서 처리 업무의 변화를 정리했습니다.",
+            "sentence_index": 2,
+            "source_start": 33,
+            "selection_score": 1.13
+          }
+        ],
+        "total_ai_seconds": 2.7496278000000003
+      }
+    },
+    {
+      "filename": "06_Product_Brief.pdf",
+      "elapsed_seconds": 2.8501914,
+      "result": {
+        "event": "ai_summary",
+        "bullets": [
+          {
+            "section": "페이지 4",
+            "anchor": "p. 4",
+            "text": "The final section must remain represented in the summary.",
+            "evidence": "03 / CONCLUSION\n\nSmall working sets, useful\nresults.\n\nThe parser runs in an isolated process with a 256 MB ceiling.\n\nThe document is processed page by page.\n\nThe final section must remain represented in the summary.",
+            "sentence_index": 4,
+            "source_start": 154,
+            "selection_score": 5.14,
+            "origin": "ai_selected",
+            "selected_sentence_id": 1,
+            "facts": {
+              "numbers_dates": [],
+              "names": [
+                "The"
+              ]
+            },
+            "verification": "source_sentence"
+          }
+        ],
+        "summary_text": "The final section must remain represented in the summary.",
+        "model_id": "Qwen3-0.6B-Q4_K_M",
+        "model_version": "23749fefcc72300e3a2ad315e1317431b06b590a",
+        "input_tokens": 277,
+        "generated_tokens": 2,
+        "inference_seconds": 1.6020603,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 277,
+          "prompt_ms": 1576.514,
+          "prompt_per_token_ms": 5.691386281588447,
+          "prompt_per_second": 175.7041168045447,
+          "predicted_n": 2,
+          "predicted_ms": 22.835,
+          "predicted_per_token_ms": 22.835,
+          "predicted_per_second": 43.79242391066345
+        },
+        "rejected_claims": 0,
+        "source_supplements": 0,
+        "evidence_sections": 2,
+        "candidate_count": 8,
+        "mode": "ai",
+        "summary_method": "ai_source_selection",
+        "verification": "source_sentence",
+        "model_peak_rss_mb": 571.3046875,
+        "model_loaded_on_request": true,
+        "result_cache": false,
+        "draft_for_validation": "1",
+        "candidate_sentences": [
+          {
+            "section": "페이지 4",
+            "anchor": "p. 4",
+            "text": "The final section must remain represented in the summary.",
+            "evidence": "03 / CONCLUSION\n\nSmall working sets, useful\nresults.\n\nThe parser runs in an isolated process with a 256 MB ceiling.\n\nThe document is processed page by page.\n\nThe final section must remain represented in the summary.",
+            "sentence_index": 4,
+            "source_start": 154,
+            "selection_score": 5.14
+          },
+          {
+            "section": "페이지 4",
+            "anchor": "p. 4",
+            "text": "Small working sets, useful results.",
+            "evidence": "03 / CONCLUSION\n\nSmall working sets, useful\nresults.\n\nThe parser runs in an isolated process with a 256 MB ceiling.\n\nThe document is processed page by page.\n\nThe final section must remain represented in the summary.",
+            "sentence_index": 1,
+            "source_start": 16,
+            "selection_score": 4.92
+          },
+          {
+            "section": "페이지 3",
+            "anchor": "p. 3",
+            "text": "Every summary starts with its source.",
+            "evidence": "02 / EVIDENCE MATTERS\n\nEvery summary starts with its\nsource.\n\nA source card identifies the filename, type, full path, size and timestamps.\n\nImportant statements keep their original page anchors.\n\nNumbers and dates are copied exactly from the source.",
+            "sentence_index": 1,
+            "source_start": 22,
+            "selection_score": 4.66
+          },
+          {
+            "section": "페이지 4",
+            "anchor": "p. 4",
+            "text": "The parser runs in an isolated process with a 256 MB ceiling.",
+            "evidence": "03 / CONCLUSION\n\nSmall working sets, useful\nresults.\n\nThe parser runs in an isolated process with a 256 MB ceiling.\n\nThe document is processed page by page.\n\nThe final section must remain represented in the summary.",
+            "sentence_index": 2,
+            "source_start": 52,
+            "selection_score": 3.4799999999999995
+          },
+          {
+            "section": "페이지 3",
+            "anchor": "p. 3",
+            "text": "A source card identifies the filename, type, full path, size and timestamps.",
+            "evidence": "02 / EVIDENCE MATTERS\n\nEvery summary starts with its\nsource.\n\nA source card identifies the filename, type, full path, size and timestamps.\n\nImportant statements keep their original page anchors.\n\nNumbers and dates are copied exactly from the source.",
+            "sentence_index": 2,
+            "source_start": 60,
+            "selection_score": 3.05
+          },
+          {
+            "section": "페이지 4",
+            "anchor": "p. 4",
+            "text": "The document is processed page by page.",
+            "evidence": "03 / CONCLUSION\n\nSmall working sets, useful\nresults.\n\nThe parser runs in an isolated process with a 256 MB ceiling.\n\nThe document is processed page by page.\n\nThe final section must remain represented in the summary.",
+            "sentence_index": 3,
+            "source_start": 114,
+            "selection_score": 2.96
+          },
+          {
+            "section": "페이지 3",
+            "anchor": "p. 3",
+            "text": "Important statements keep their original page anchors.",
+            "evidence": "02 / EVIDENCE MATTERS\n\nEvery summary starts with its\nsource.\n\nA source card identifies the filename, type, full path, size and timestamps.\n\nImportant statements keep their original page anchors.\n\nNumbers and dates are copied exactly from the source.",
+            "sentence_index": 3,
+            "source_start": 137,
+            "selection_score": 2.83
+          },
+          {
+            "section": "페이지 3",
+            "anchor": "p. 3",
+            "text": "Numbers and dates are copied exactly from the source.",
+            "evidence": "02 / EVIDENCE MATTERS\n\nEvery summary starts with its\nsource.\n\nA source card identifies the filename, type, full path, size and timestamps.\n\nImportant statements keep their original page anchors.\n\nNumbers and dates are copied exactly from the source.",
+            "sentence_index": 4,
+            "source_start": 192,
+            "selection_score": 2.8200000000000003
+          }
+        ],
+        "total_ai_seconds": 2.5174597999999997
+      }
+    }
+  ]
+}

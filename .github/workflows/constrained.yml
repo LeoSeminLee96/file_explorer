@@ -1,0 +1,20 @@
+name: Bounded-memory explorer
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  constrained:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11-bookworm
+      options: --memory=4g --memory-swap=4g --cpus=2
+    steps:
+      - uses: actions/checkout@v4
+      - run: apt-get update && apt-get install -y python3-tk tk xvfb xauth
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -v
+      - run: xvfb-run -a python scripts/ui_smoke.py
+      - run: python scripts/benchmark.py --limit-mb 4096 --output docs/ci-4gb.json
+      - run: python scripts/benchmark.py --quick --limit-mb 2048 --output docs/ci-2gb.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: constrained-benchmarks
+          path: docs/ci-*.json
