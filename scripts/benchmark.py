@@ -145,7 +145,7 @@ def main():
     parser.add_argument('--fixture')
     parser.add_argument('--workdir', default=str(ROOT / '.data' / 'benchmarks'))
     parser.add_argument('--limit-mb', type=int, default=4096)
-    parser.add_argument('--output', default=str(ROOT / 'docs' / 'benchmark-results.json'))
+    parser.add_argument('--output', default=str(ROOT / 'docs' / 'reports' / 'benchmark-results.json'))
     parser.add_argument('--quick', action='store_true')
     args = parser.parse_args()
     if args.case:

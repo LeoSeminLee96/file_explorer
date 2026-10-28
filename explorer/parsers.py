@@ -71,7 +71,7 @@ def stream_text(path):
         stream.seek(0)
         reader = codecs.getreader(encoding)(stream, errors='replace')
         line_number, paragraph, size = 0, [], 0
-        section = '본문'
+        section = 'Body'
         while True:
             # readline(size) prevents a single giant line from defeating the bound.
             line = reader.readline(BLOCK)
@@ -82,18 +82,18 @@ def stream_text(path):
             heading = bool(re.match(r'^#{1,6}\s+\S', clean))
             if not clean or heading or size + len(clean) > BLOCK:
                 if paragraph:
-                    yield Segment(section if section != '본문' else '문단 %d' % start, '줄 %d' % start, ' '.join(paragraph))
+                    yield Segment(section if section != 'Body' else 'Paragraph %d' % start, 'line %d' % start, ' '.join(paragraph))
                 paragraph, size = [], 0
             if heading:
                 section = clean.lstrip('# ').strip()[:160]
-                yield Segment(section, '줄 %d' % line_number, section, True)
+                yield Segment(section, 'line %d' % line_number, section, True)
             elif clean:
                 if not paragraph:
                     start = line_number
                 paragraph.append(clean)
                 size += len(clean)
         if paragraph:
-            yield Segment(section if section != '본문' else '문단 %d' % start, '줄 %d' % start, ' '.join(paragraph))
+            yield Segment(section if section != 'Body' else 'Paragraph %d' % start, 'line %d' % start, ' '.join(paragraph))
 
 
 def segments(path: Path, kind: Kind):
@@ -107,7 +107,7 @@ def segments(path: Path, kind: Kind):
         fitz.TOOLS.store_shrink(100)
         with fitz.open(path) as document:
             if document.needs_pass:
-                raise ValueError('암호화된 PDF입니다.')
+                raise ValueError('PDF is encrypted.')
             repeated = Counter()
             def edge_key(block, height):
                 if block[1] < height * .07 or block[3] > height * .90:
@@ -130,16 +130,16 @@ def segments(path: Path, kind: Kind):
                     texts.append(block[4])
                 text = '\n'.join(texts)
                 for index in range(0, len(text), BLOCK):
-                    yield Segment('페이지 %d' % (number + 1), 'p. %d' % (number + 1), text[index:index + BLOCK])
+                    yield Segment('Page %d' % (number + 1), 'p. %d' % (number + 1), text[index:index + BLOCK])
                 # Empty scanned pages are represented explicitly, never invented.
                 if not text.strip():
-                    yield Segment('페이지 %d' % (number + 1), 'p. %d' % (number + 1), '')
+                    yield Segment('Page %d' % (number + 1), 'p. %d' % (number + 1), '')
                 if number % 20 == 0:
                     fitz.TOOLS.store_shrink(100)
         return
     with checked_zip(path) as archive:
         if fmt == 'docx':
-            section, number = '본문', 0
+            section, number = 'Body', 0
             for _, element in xml_elements(archive, 'word/document.xml', {'p'}):
                 number += 1
                 text = ' '.join((e.text or '') for e in element.iter() if local(e.tag) == 't')[:BLOCK]
@@ -147,7 +147,7 @@ def segments(path: Path, kind: Kind):
                 if is_heading:
                     section = text[:160] or section
                 if text.strip():
-                    yield Segment(section, '문단 %d' % number, text, is_heading)
+                    yield Segment(section, 'Paragraph %d' % number, text, is_heading)
             return
         if fmt == 'pptx':
             names = sorted((n for n in archive.namelist() if re.fullmatch(r'ppt/slides/slide\d+\.xml', n)), key=lambda n: int(re.search(r'slide(\d+)', n).group(1)))
@@ -156,7 +156,7 @@ def segments(path: Path, kind: Kind):
                 for _, element in xml_elements(archive, name, {'p'}):
                     text = xml_text(element)
                     if text:
-                        yield Segment('슬라이드 ' + number, 'slide ' + number, text)
+                        yield Segment('Slide ' + number, 'slide ' + number, text)
                 relation_name = 'ppt/slides/_rels/slide%s.xml.rels' % number
                 if relation_name in archive.namelist():
                     for _, relation in xml_elements(archive, relation_name, {'Relationship'}):
@@ -169,11 +169,11 @@ def segments(path: Path, kind: Kind):
                         extra = target.lstrip('/') if target.startswith('/') else posixpath.normpath(posixpath.join('ppt/slides', target))
                         if extra not in archive.namelist():
                             continue
-                        anchor = '발표자 노트 ' if relation_type == 'notesSlide' else '차트 '
+                        anchor = 'Speaker notes ' if relation_type == 'notesSlide' else 'Chart '
                         for _, element in xml_elements(archive, extra, {'p', 'v'}):
                             text = xml_text(element)
                             if text:
-                                yield Segment('슬라이드 ' + number, anchor + number, text)
+                                yield Segment('Slide ' + number, anchor + number, text)
             return
         if fmt == 'xlsx':
             yield from spreadsheet(archive)
@@ -185,9 +185,9 @@ def segments(path: Path, kind: Kind):
                     number += 1
                     text = xml_text(element)
                     if text:
-                        yield Segment(name, '%s · 문단 %d' % (name, number), text)
+                        yield Segment(name, '%s · Paragraph %d' % (name, number), text)
             return
-        section, number = '본문', 0
+        section, number = 'Body', 0
         # ODF maintains text headings, slide and table names.
         with archive.open('content.xml') as stream:
             stack = []
@@ -204,7 +204,7 @@ def segments(path: Path, kind: Kind):
                     if tag == 'h':
                         section = text[:160]
                     if text:
-                        yield Segment(section, '%s · 문단 %d' % (section, number), text, tag == 'h')
+                        yield Segment(section, '%s · Paragraph %d' % (section, number), text, tag == 'h')
                     if len(stack) > 1:
                         stack[-2].remove(element)
                     element.clear()
@@ -266,10 +266,10 @@ def spreadsheet(archive):
                                 pass
                         if len(headers) < 16 and value and not re.fullmatch(r'[-+\d.Ee]+', value):
                             headers.append('%s: %s' % (ref, value[:100]))
-                text = ('시트: %s. 사용 범위: %s:%s. 셀 %d개, 수식 %d개, 숫자 셀 %d개. '
-                        '텍스트/헤더: %s.' % (sheet, first, last, cells, formulas, numeric, '; '.join(headers)))
+                text = ('Sheet: %s. Used range: %s:%s. Cells: %d, formulas: %d, numeric cells: %d. '
+                        'Text/headers: %s.' % (sheet, first, last, cells, formulas, numeric, '; '.join(headers)))
                 if numeric:
-                    text += ' 숫자 셀 통계(서로 다른 단위가 섞일 수 있음): 최소 %s, 최대 %s, 합계 %s.' % (minimum, maximum, total)
+                    text += ' Numeric cell statistics (units may differ): minimum %s, maximum %s, sum %s.' % (minimum, maximum, total)
                 yield Segment(sheet, '%s!%s:%s' % (sheet, first, last), text)
         finally:
             db.close()

@@ -137,7 +137,7 @@ def overview(db, key):
 
 def summarize(path, kind, db, info, notify=lambda event: None):
     if not kind.summarizable:
-        raise ValueError('검증된 문서만 요약할 수 있습니다.')
+        raise ValueError('Only validated documents can be summarized.')
     init_state(db)
     _, source, before = identity(path)
     key = uuid.uuid4().hex  # A request identifier, never a reusable cache key.
@@ -153,7 +153,7 @@ def summarize(path, kind, db, info, notify=lambda event: None):
         if kind.format in ('text', 'markdown') and len(segment.text) > 500:
             if not natural_text(segment.text):
                 db.rollback()
-                raise ValueError('문서 내부에서 코드·설정·기계 데이터가 감지되어 요약을 중단했습니다.')
+                raise ValueError('Summary stopped: code, configuration, or machine data detected inside the document.')
         if len(preview) < 48000:
             preview += '\n[%s]\n%s\n' % (segment.anchor, segment.text[:48000 - len(preview)])
         excerpt, score = representative(segment.text, segment.heading)
@@ -168,15 +168,15 @@ def summarize(path, kind, db, info, notify=lambda event: None):
         if position % 100 == 0:
             db.commit()
         if time.monotonic() - last_notice > .5:
-            notify(dict(event='progress', message='%s개 구간 처리 중' % position))
+            notify(dict(event='progress', message='Processing segment %s' % position))
             last_notice = time.monotonic()
     if stamp(path) != before:
         db.rollback()
         db.execute('DELETE FROM sections WHERE key=?', (key,))
         db.commit()
-        raise ValueError('요약 중 원문이 변경되었습니다. 결과를 폐기했습니다.')
+        raise ValueError('The source changed during summarization. Results were discarded.')
     if not preview.strip():
-        raise ValueError('추출 가능한 텍스트가 없습니다. 스캔 PDF는 OCR이 필요합니다.')
+        raise ValueError('No extractable text found. Scanned PDFs require OCR.')
     info['language'] = language(preview)
     db.commit()
     bullets, count = overview(db, key)

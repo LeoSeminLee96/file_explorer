@@ -17,10 +17,18 @@ def main():
         try:
             assert app.ai_config, 'Install the CPU model first'
             wait(app, lambda: app.ready and not app.scan_running)
-            app.tree.selection_set(str(ROOT / 'sample_documents' / '02_제품_기획_회의.md'))
+            app.tree.selection_set(str(ROOT / 'sample_documents' / '02_Product_Planning.md'))
             wait(app, lambda: app.kind is not None)
             app.request_summary()
-            wait(app, lambda: app.worker.action == 'ai')
+            wait(app, lambda: app.worker.action == 'ai' or app.summary_result is not None)
+            if app.worker.action != 'ai':
+                assert 'Low available memory' in app.status.get(), app.status.get()
+                assert app.summary_result['bullets']
+                assert app.summary_result.get('mode') != 'ai'
+                assert app.worker.process is None or app.worker.action != 'ai'
+                print(json.dumps({'ui_ai_smoke': 'skipped', 'reason': 'Insufficient available RAM for the AI memory guard',
+                    'low_memory_fallback': 'passed', 'real_cpu_inference': False}))
+                return
             ticks = []
             def tick():
                 ticks.append(time.perf_counter())
@@ -37,13 +45,13 @@ def main():
             assert app.summary_result['model_loaded_on_request']
             assert app.summary_result['model_peak_rss_mb'] > 0
             assert app.summary_result['input_tokens'] <= 1400
-            assert '완료' in app.pane_label['text']
+            assert 'Complete' in app.pane_label['text']
             assert app.summary_result['verification'] == 'source_sentence'
             from explorer.summary import source_sentences
             selected_source = app.summary_result['bullets'][0]
             assert selected_source['text'] in source_sentences(selected_source['evidence'])
             if app.summary_result['mode'] == 'ai':
-                assert 'AI 선택' in app.pane_label['text']
+                assert 'AI selection' in app.pane_label['text']
                 assert selected_source['origin'] == 'ai_selected'
             assert len(app.summary_result['bullets']) == 1
             assert '\n' not in app.summary_result['summary_text']

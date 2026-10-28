@@ -77,15 +77,15 @@ def checked_zip(path: Path) -> zipfile.ZipFile:
         tail = stream.read(65557)
     pos = tail.rfind(b'PK\x05\x06')
     if pos < 0 or len(tail) - pos < 22:
-        raise ValueError('유효하지 않은 문서 컨테이너입니다.')
+        raise ValueError('Invalid document container.')
     entries, directory_size = struct.unpack_from('<HI', tail, pos + 10)
     if entries == 65535 or entries > 20000 or directory_size > 8 * 1024**2:
-        raise ValueError('안전한 컨테이너 한도를 초과했습니다.')
+        raise ValueError('Document container exceeds safety limits.')
     archive = zipfile.ZipFile(path)
     for entry in archive.infolist():
         if entry.flag_bits & 1 or entry.file_size > 256 * 1024**2:
             archive.close()
-            raise ValueError('암호화되었거나 안전 한도를 초과한 문서입니다.')
+            raise ValueError('Document is encrypted or exceeds safety limits.')
     return archive
 
 
@@ -94,10 +94,10 @@ def detect(path: Path) -> Kind:
     with path.open('rb') as stream:
         head = stream.read(32768)
     if head.startswith((b'MZ', b'\x7fELF', b'\xcf\xfa\xed\xfe', b'SQLite format 3', b'GGUF')):
-        return Kind('binary', 'Binary', reason='실행 파일 또는 바이너리는 요약하지 않습니다.')
+        return Kind('binary', 'Binary', reason='Executables and binary files cannot be summarized.')
     if ext in NEVER:
         is_text = ext in SOURCE or ext in {'.json', '.toml', '.yaml', '.yml', '.xml', '.log', '.ini', '.cfg', '.csv', '.tsv'}
-        return Kind('code' if is_text else 'binary', 'Source / Data' if is_text else 'Binary', reason='문서 전용 요약 대상이 아닙니다.')
+        return Kind('code' if is_text else 'binary', 'Source / Data' if is_text else 'Binary', reason='Summaries are available only for documents.')
     if head.startswith(b'%PDF-'):
         available = importlib.util.find_spec('fitz') is not None
         if available:
@@ -106,10 +106,10 @@ def detect(path: Path) -> Kind:
                 with fitz.open(path) as document:
                     valid = document.is_pdf and not document.needs_pass and document.page_count > 0
                 if not valid:
-                    return Kind('pdf', 'PDF Document', True, False, '암호 또는 유효한 페이지를 확인하세요.')
+                    return Kind('pdf', 'PDF Document', True, False, 'Check the document password and page validity.')
             except Exception:
-                return Kind('binary', 'Invalid PDF', reason='PDF 파서 검증에 실패했습니다.')
-        return Kind('pdf', 'PDF Document', True, available, '' if available else 'PDF 지원 설치: pip install -r requirements.txt')
+                return Kind('binary', 'Invalid PDF', reason='PDF parser validation failed.')
+        return Kind('pdf', 'PDF Document', True, available, '' if available else 'Install PDF support: pip install -r requirements.txt')
     if head.startswith(b'PK\x03\x04'):
         with checked_zip(path) as archive:
             names = set(archive.namelist())
@@ -128,15 +128,15 @@ def detect(path: Path) -> Kind:
                 for suffix, fmt, label in [('text', 'odt', 'OpenDocument Text'), ('presentation', 'odp', 'OpenDocument Presentation'), ('spreadsheet', 'ods', 'OpenDocument Spreadsheet')]:
                     if mime == 'application/vnd.oasis.opendocument.' + suffix:
                         return Kind(fmt, label, True, True)
-        return Kind('binary', 'Archive', reason='지원하는 문서 구조가 없습니다.')
+        return Kind('binary', 'Archive', reason='No supported document structure found.')
     if head.startswith(b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1'):
-        return Kind('ole', 'Legacy Office / HWP', True, False, '안전한 파서가 없습니다. DOCX·PPTX·XLSX·HWPX로 변환하세요.')
+        return Kind('ole', 'Legacy Office / HWP', True, False, 'No safe parser available. Convert to DOCX, PPTX, XLSX, or HWPX.')
     if head.startswith(b'{\\rtf'):
-        return Kind('rtf', 'RTF Document', True, False, '안전한 RTF 파서가 없습니다. TXT 또는 DOCX로 변환하세요.')
+        return Kind('rtf', 'RTF Document', True, False, 'No safe RTF parser available. Convert to TXT or DOCX.')
     text = decode(head)
     # A renamed binary/container or a mismatched document extension is never plaintext.
     if ext not in TEXT_EXT or b'\x00' in head and not head.startswith((b'\xff\xfe', b'\xfe\xff')):
-        return Kind('binary', 'Unverified File', reason='실제 파일 형식을 확인할 수 없습니다.')
+        return Kind('binary', 'Unverified File', reason='Unable to verify the actual file format.')
     prose = natural_text(text)
     return Kind('markdown' if ext in {'.md', '.markdown'} else 'text', 'Markdown Document' if ext in {'.md', '.markdown'} else 'Text Document', prose, prose,
-                '' if prose else '코드·설정·로그이거나 자연어 문서로 확인되지 않았습니다.', language(text))
+                '' if prose else 'Content appears to be code, configuration, logs, or unverified prose.', language(text))

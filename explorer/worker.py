@@ -28,7 +28,7 @@ def inspect_file(path):
                 break
         info['language'] = language(preview)
     if stamp(path) != before:
-        raise ValueError('파일이 변경되었습니다. 다시 선택하세요.')
+        raise ValueError('The file has changed. Select it again.')
     # Parser validation must complete before Summary is enabled in the UI.
     emit(dict(event='inspected', kind=kind.dict(), info=info, preview=preview[:24000], stamp=before))
 
@@ -39,7 +39,7 @@ def content_search(request):
     from .files import file_db, scan
     root, query = Path(request['path']), request['query'].casefold()
     filename = request['search_db']
-    scan(root, filename, request.get('recursive', False), progress=lambda n: emit(dict(event='progress', message='%s개 파일 탐색 중' % n)))
+    scan(root, filename, request.get('recursive', False), progress=lambda n: emit(dict(event='progress', message='Scanning %s files' % n)))
     db = file_db(filename)
     try:
         matches, scanned, last = 0, 0, time.monotonic()
@@ -69,7 +69,7 @@ def content_search(request):
                 # A bad document cannot abort a corpus search.
                 pass
             if time.monotonic() - last > .5:
-                emit(dict(event='progress', message='%s개 검사 · %s개 일치' % (scanned, matches)))
+                emit(dict(event='progress', message='%s checked · %s matches' % (scanned, matches)))
                 last = time.monotonic()
         emit(dict(event='search_done', matches=matches, scanned=scanned, limited=matches >= 160))
     finally:
@@ -79,7 +79,7 @@ def content_search(request):
 def main():
     request = json.loads(sys.stdin.readline())
     if not constrain_process(request.get('memory_mb', 256)):
-        emit(dict(event='error', message='OS 메모리 제한을 설정하지 못해 안전하게 처리를 중단했습니다.'))
+        emit(dict(event='error', message='Processing stopped because the OS memory limit could not be applied.'))
         return
     try:
         path = Path(request['path'])
@@ -91,13 +91,13 @@ def main():
             from .summary import overview
             kind = detect(path)
             if not kind.summarizable:
-                raise ValueError('검증된 문서만 AI에 전달할 수 있습니다.')
+                raise ValueError('Only validated documents can be sent to AI.')
             _, source, before = identity(path)
             if source['content_hash'] != request['content_hash']:
-                raise ValueError('문서 추출 이후 원문이 변경되었습니다.')
+                raise ValueError('The source changed after document extraction.')
             config = load_config(request.get('model_config'))
             if not config:
-                raise ValueError('사용 가능한 소형 CPU 모델이 없습니다.')
+                raise ValueError('No small CPU model is available.')
             if request.get('diagnostics'):
                 config['diagnostics'] = True
             config['document_title'] = path.stem
@@ -107,14 +107,14 @@ def main():
             finally:
                 db.close()
             if not evidence:
-                raise ValueError('AI 요약을 위한 문서 근거가 없습니다.')
-            emit(dict(event='progress', message='소형 CPU 모델 로드 중 · 단일 작업 / 컨텍스트 2K'))
+                raise ValueError('No document evidence is available for AI summarization.')
+            emit(dict(event='progress', message='Loading small CPU model · Single task / 2K context'))
             started = time.perf_counter()
             with LlamaCppModel(config, Path(request['workspace']).parent) as model:
-                emit(dict(event='progress', message='AI가 핵심 원문 문장을 선택 중 · 문장 생성 없이 출처 그대로 표시합니다'))
+                emit(dict(event='progress', message='AI is selecting a source sentence · Displaying original text without rewriting'))
                 result = model.summarize(evidence)
             if stamp(path) != before:
-                raise ValueError('AI 처리 중 원문이 변경되었습니다. 결과를 폐기했습니다.')
+                raise ValueError('The source changed during AI processing. Results were discarded.')
             emit(dict(event='ai_summary', **result, total_ai_seconds=time.perf_counter() - started))
         elif action == 'inspect':
             inspect_file(path)
@@ -137,7 +137,7 @@ def main():
             finally:
                 db.close()
     except MemoryError:
-        emit(dict(event='error', message='메모리 한도에 도달했습니다. 작업을 중단했습니다. 파일 탐색은 계속 사용할 수 있습니다.'))
+        emit(dict(event='error', message='Memory limit reached. Operation stopped. File browsing remains available.'))
     except Exception as error:
         emit(dict(event='error', message=str(error)[:500] or type(error).__name__))
 

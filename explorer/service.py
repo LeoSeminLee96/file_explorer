@@ -76,12 +76,12 @@ class Worker:
                 self.reported_exit = True
                 code = self.process.poll() if self.process else 0
                 if code not in (None, 0):
-                    result.append({'event': 'error', 'message': '문서 작업 프로세스가 종료되었습니다. 메모리 한도 또는 파일 손상을 확인하세요.'})
+                    result.append({'event': 'error', 'message': 'Document worker exited. Check memory limits or file integrity.'})
             else:
                 result.append(event)
         if self.process and self.process.poll() is None and self.action == 'inspect' and time.monotonic() - self.started > 25:
             self.stop()
-            result.append({'event': 'error', 'message': '미리보기 제한 시간(25초)을 초과했습니다.'})
+            result.append({'event': 'error', 'message': 'Preview timed out after 25 seconds.'})
         return result
 
     def stop(self):

@@ -32,7 +32,7 @@ def run(worker, timeout=90, **request):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-config')
-    parser.add_argument('--output', default=str(ROOT / 'docs' / 'ai-benchmark.json'))
+    parser.add_argument('--output', default=str(ROOT / 'docs' / 'reports' / 'ai-benchmark.json'))
     args = parser.parse_args()
     config = load_config(args.model_config)
     if not config:
@@ -40,7 +40,7 @@ def main():
     if not constrain_process(2048):
         raise RuntimeError('Unable to enforce 2GB process-tree budget')
     results = []
-    for name in ('02_제품_기획_회의.md', '03_분기_운영_보고서.txt', '06_Product_Brief.pdf'):
+    for name in ('02_Product_Planning.md', '03_Quarterly_Operations.txt', '06_Product_Brief.pdf'):
         path = ROOT / 'sample_documents' / name
         with tempfile.TemporaryDirectory(prefix='ai-benchmark-', dir=ROOT / '.data') as temp:
             worker = Worker()
@@ -70,7 +70,7 @@ def main():
     target.write_text(json.dumps(dict(model=config['model_id'], cpu_threads=2, context=2048,
         process_tree_limit_mb=2048, summary_cache=False, results=results), ensure_ascii=False, indent=2), encoding='utf-8')
     if any(row['result']['event'] == 'error' for row in results):
-        raise SystemExit('At least one AI run failed; inspect docs/ai-benchmark.json')
+        raise SystemExit('At least one AI run failed; inspect docs/reports/ai-benchmark.json')
 
 
 if __name__ == '__main__':

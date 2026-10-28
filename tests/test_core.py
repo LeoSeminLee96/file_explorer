@@ -70,7 +70,7 @@ class CoreTests(unittest.TestCase):
         doc.save(path)
         doc.close()
         self.assertEqual(detect(path).format, 'pdf')
-        with self.assertRaisesRegex(ValueError, '텍스트'):
+        with self.assertRaisesRegex(ValueError, 'text'):
             summarize(path, detect(path), self.db, metadata(path, detect(path)))
 
     def test_docx_structure_headings_tables_and_extensionless(self):
@@ -101,7 +101,7 @@ class CoreTests(unittest.TestCase):
         items = list(segments(path, detect(path)))
         self.assertEqual(items[0].anchor, 'Revenue!A1:B1')
         self.assertIn('Sales', items[0].text)
-        self.assertIn('수식 1개', items[0].text)
+        self.assertIn('formulas: 1', items[0].text)
 
     def test_pptx_notes_use_relationship_not_slide_number(self):
         path = self.archive('slides.pptx', {'[Content_Types].xml': '<Types/>', 'ppt/presentation.xml': '<presentation/>',
@@ -109,7 +109,7 @@ class CoreTests(unittest.TestCase):
             'ppt/slides/_rels/slide1.xml.rels': '<Relationships><Relationship Type="http://x/notesSlide" Target="../notesSlides/notesSlide9.xml"/></Relationships>',
             'ppt/notesSlides/notesSlide9.xml': '<notes><p><t>Important speaker evidence.</t></p></notes>'})
         items = list(segments(path, detect(path)))
-        self.assertEqual(items[-1].anchor, '발표자 노트 1')
+        self.assertEqual(items[-1].anchor, 'Speaker notes 1')
         self.assertIn('speaker evidence', items[-1].text)
 
     def test_every_summary_rereads_source_without_reusing_results(self):
@@ -137,7 +137,7 @@ class CoreTests(unittest.TestCase):
         def mutate(event):
             if event['event'] == 'quick':
                 path.write_text(path.read_text() + '\nChanged.', encoding='utf-8')
-        with self.assertRaisesRegex(ValueError, '변경'):
+        with self.assertRaisesRegex(ValueError, 'changed'):
             summarize(path, detect(path), self.db, {}, mutate)
 
     def test_all_sections_preserved_and_late_evidence_in_overview(self):

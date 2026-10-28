@@ -76,7 +76,7 @@ class LlamaCppModel:
         with self.opener.open(request, timeout=timeout) as response:
             raw = response.read(256 * 1024 + 1)
             if len(raw) > 256 * 1024:
-                raise ValueError('AI 응답이 안전 한도를 초과했습니다.')
+                raise ValueError('AI response exceeds safety limits.')
             return json.loads(raw)
 
     def __enter__(self):
@@ -101,14 +101,14 @@ class LlamaCppModel:
             while time.monotonic() < deadline:
                 if self.process.poll() is not None:
                     if self.memory_exceeded:
-                        raise MemoryError('CPU 모델 RSS %.0fMB: 768MB 한도를 초과했습니다.' % self.peak_rss_mb)
-                    raise RuntimeError('CPU 모델을 메모리 한도 안에서 로드하지 못했습니다.')
+                        raise MemoryError('CPU model RSS %.0fMB exceeds the 768MB limit.' % self.peak_rss_mb)
+                    raise RuntimeError('Unable to load the CPU model within the memory budget.')
                 try:
                     self.call('/health', timeout=.3)
                     return self
                 except (OSError, urllib.error.URLError):
                     time.sleep(.08)
-            raise TimeoutError('CPU 모델 로드 제한 시간을 초과했습니다.')
+            raise TimeoutError('CPU model loading timed out.')
         except BaseException:
             self.close()
             raise
@@ -187,7 +187,7 @@ class LlamaCppModel:
     def summarize(self, evidence):
         candidates = self.candidate_sentences(evidence)
         if not candidates:
-            raise ValueError('자를 필요 없이 그대로 표시할 수 있는 짧은 원문 문장이 없습니다.')
+            raise ValueError('No short source sentence is available without truncation.')
         while candidates:
             prompt = self.prompt(candidates)
             tokens = self.call('/tokenize', {'content': prompt, 'add_special': True})['tokens']
@@ -195,7 +195,7 @@ class LlamaCppModel:
                 break
             candidates.pop()  # Remove a whole candidate; never crop its words.
         if not candidates:
-            raise ValueError('AI 입력이 고정 컨텍스트 한도를 초과했습니다.')
+            raise ValueError('AI input exceeds the fixed context budget.')
         started = time.perf_counter()
         grammar = 'root ::= ' + ' | '.join(json.dumps(str(i)) for i in range(1, len(candidates) + 1))
         result = self.call('/completion', {'prompt': prompt, 'n_predict': 8, 'temperature': 0,
@@ -207,7 +207,7 @@ class LlamaCppModel:
         if not bullets:
             bullets = [dict(candidates[0], origin='extractive', facts=facts(candidates[0]['text']), verification='source_sentence')]
         if self.memory_exceeded:
-            raise MemoryError('모델 RSS 한도를 초과했습니다.')
+            raise MemoryError('Model RSS limit exceeded.')
         result_data = dict(bullets=bullets, summary_text=bullets[0]['text'], model_id=self.model_id, model_version=self.model_version,
             input_tokens=len(tokens), generated_tokens=result.get('tokens_predicted'),
             inference_seconds=time.perf_counter() - started, timings=result.get('timings', {}),

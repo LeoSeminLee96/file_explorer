@@ -1,0 +1,17 @@
+Quarterly operations report
+
+Overview
+
+This fictional operations report is a demonstration fixture, not a company's financial statement. It describes document-processing changes during the third quarter of 2026.
+
+Operating metrics
+
+The team reviewed 1,250 documents this quarter. Processing volume increased by 25% from 1,000 documents in the previous quarter. Average review time fell from 18 minutes to 12 minutes.
+
+Improvement areas
+
+Inconsistent filenames and storage locations made duplicate checks time-consuming. The interface should display full paths and modified times together. Summaries should preserve important figures and source locations.
+
+Conclusion
+
+The next quarter will focus on search and preview responsiveness. Basic file browsing must remain available when no AI model is installed or memory is scarce.

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "meeting",
+    "fixture": "02_Product_Planning.md",
+    "topics": [
+      [
+        "검색"
+      ],
+      [
+        "미리보기"
+      ]
+    ]
+  },
+  {
+    "id": "metrics",
+    "fixture": "03_Quarterly_Operations.txt",
+    "topics": [
+      [
+        "25%"
+      ],
+      [
+        "검토",
+        "처리"
+      ]
+    ]
+  },
+  {
+    "id": "product_brief",
+    "sample": "06_Product_Brief.pdf",
+    "topics": [
+      [
+        "memory"
+      ],
+      [
+        "document",
+        "file"
+      ]
+    ]
+  },
+  {
+    "id": "privacy",
+    "title": "파일 공유 정책 결정",
+    "topics": [
+      [
+        "로컬"
+      ],
+      [
+        "승인",
+        "수동",
+        "자동 업로드하지"
+      ]
+    ],
+    "text": "# 파일 공유 정책 결정\n\n## 회의 개요\n2026년 10월 20일 파일 공유 정책을 검토했습니다. 검토 중인 초안에는 자동 업로드 기능이 포함되어 있었습니다.\n\n## 주요 결정\n자동 업로드는 도입하지 않습니다. 사용자가 직접 승인한 파일만 공유하고, 나머지 문서는 로컬 저장소에 보관합니다. 외부 서버로 자동 전송하지 않는 수동 승인 방식을 채택합니다.\n\n## 다음 단계\n2026년 11월 3일 화면 시안을 검토할 예정입니다. 아직 기능을 출시하지 않았습니다.\n"
+  },
+  {
+    "id": "streaming",
+    "title": "대용량 문서 처리 설계",
+    "topics": [
+      [
+        "스트리밍",
+        "분할"
+      ],
+      [
+        "64KB",
+        "메모리"
+      ]
+    ],
+    "text": "# 대용량 문서 처리 설계\n\n## 배경\n기존 처리는 파일 전체를 메모리에 올려 대용량 문서에서 프로그램이 종료되는 문제가 있었습니다.\n\n## 핵심 설계\n문서를 64KB 버퍼로 나누어 읽는 스트리밍 방식을 사용합니다. 처리한 구간은 즉시 해제하고 파일 전체 텍스트를 메모리에 보관하지 않습니다. 입력 크기와 관계없이 작업 메모리를 제한합니다.\n\n## 검증 계획\n수천 페이지 문서에서 메모리 사용량을 측정할 예정이며 아직 운영 환경에 배포하지 않았습니다.\n"
+  },
+  {
+    "id": "pilot",
+    "title": "Local pilot decision",
+    "topics": [
+      [
+        "local"
+      ],
+      [
+        "pilot"
+      ],
+      [
+        "20"
+      ]
+    ],
+    "text": "# Local pilot decision\n\n## Background\nThe team reviewed a cloud migration proposal during the planning meeting.\n\n## Decision\nThe cloud migration was rejected. The team approved a local-only pilot for 20 users to evaluate document search. A production rollout has not been approved.\n\n## Next steps\nThe pilot is scheduled to begin next month. It has not launched yet.\n"
+  },
+  {
+    "id": "incident",
+    "title": "Temporary storage incident",
+    "topics": [
+      [
+        "disk",
+        "storage"
+      ],
+      [
+        "temporary",
+        "cleanup",
+        "cleaning"
+      ]
+    ],
+    "text": "# Temporary storage incident\n\n## Background\nDocument extraction failed on several workstations during a routine test.\n\n## Conclusion\nThe failures were caused by a full temporary disk, not a network outage. Cleaning temporary files restored extraction. Read-only file browsing remained available during the incident.\n\n## Prevention\nThe team will add a temporary storage usage check before starting extraction.\n"
+  }
+]

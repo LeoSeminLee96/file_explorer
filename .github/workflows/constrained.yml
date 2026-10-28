@@ -12,9 +12,9 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m unittest discover -v
       - run: xvfb-run -a python scripts/ui_smoke.py
-      - run: python scripts/benchmark.py --limit-mb 4096 --output docs/ci-4gb.json
-      - run: python scripts/benchmark.py --quick --limit-mb 2048 --output docs/ci-2gb.json
+      - run: python scripts/benchmark.py --limit-mb 4096 --output docs/reports/ci-4gb.json
+      - run: python scripts/benchmark.py --quick --limit-mb 2048 --output docs/reports/ci-2gb.json
       - uses: actions/upload-artifact@v4
         with:
           name: constrained-benchmarks
-          path: docs/ci-*.json
+          path: docs/reports/ci-*.json

@@ -1,31 +1,47 @@
-# 구현 및 검증 범위
+# Implementation and validation scope
 
-사용자의 후속 지시에 따라 AGENTS.md의 요약·추출 캐시 요구는 적용하지 않습니다. 모든 요약 요청은 원문을 새로 처리하며 작업용 근거만 임시 저장합니다.
+Summary and extraction caching are disabled by the user's later instruction, overriding those parts of `AGENTS.md`. Each request processes the source again. Only temporary evidence for the current job is stored.
 
-## 구현한 기능
+## Implemented
 
-탐색·이름/경로/본문 검색, 선택한 파일의 신원 카드, 안전한 텍스트 미리보기, 문서 전용 추출식 요약, 원문 위치, 초벌·완료 상태 구분, 섹션별 대표 근거와 페이지 표시, 숫자·이름·날짜의 원문 일치 확인, 파일 변경 감지, 작업 취소, 워커 격리와 OS 메모리 상한을 구현했습니다.
+Folder browsing; name, path, and content search; file identity cards; safe text previews; document-only extractive selection; source locations; preliminary and complete states; paginated section evidence; source checks for numbers, names, and dates; change detection; cancellation; worker isolation; and OS memory ceilings.
 
-파일 규모에 따라 메모리에 목록 전체를 적재하지 않으며, 디렉터리 탐색 대기열과 섹션 근거는 디스크에 기록합니다. 수천 페이지 문서의 본문은 페이지 단위로 읽습니다. 소스코드는 어떤 생성형 모델에도 보내지 않습니다. 임베딩 또는 자동 문서 요약을 실행하지 않습니다.
+Directory queues and section evidence are disk-backed. Thousands of pages are processed page by page. Source code is never sent to the model. Embeddings and automatic background document summaries are disabled.
 
-명시적 요청에는 CPU 전용 Qwen3 0.6B Q4_K_M을 실행합니다. 자유 생성 방식에서 어휘·숫자 검사가 의미 왜곡을 놓친 사례가 있어 모델 역할을 원문 문장 선택으로 제한했습니다. 실제 토크나이저로 입력 1,400토큰 이하를 확인하고 2K 컨텍스트에서 최대 8토큰의 후보 번호만 받습니다. 앱은 검증된 후보에서 원문 문장 하나를 가져와 표시합니다. mmap, Q8 KV, 단일 슬롯·스레드 2개와 낮은 CPU 우선순위를 유지하고 작업 후 모델을 해제합니다. 원문 자체의 진실성과 문서 전체에 대한 대표성까지 증명하는 것은 아닙니다.
+Explicit AI requests use Qwen3 0.6B Q4_K_M on CPU. Because lexical and numeric checks missed semantic distortions in generated summaries, the model now selects only a source sentence ID. Input is verified at no more than 1,400 tokens within a 2K context; output is limited to eight tokens. The app copies one verified source sentence. mmap, Q8 KV, one slot, two threads, and low CPU priority remain enabled. The model is released after each job. Source truth and representative selection are separate quality concerns.
 
-## 로컬 검증
+The interface, messages, documentation, and browsing samples use English. Korean regression documents remain in `tests/fixtures/korean`; Korean language patterns and historical raw outputs preserve multilingual coverage and measurement integrity.
 
-- Python unittest: 파일 위장, 확장자 없는 PDF/Office, 코드·로그·설정의 TXT 위장, 잘못된 XML, XLSX shared strings·실제 시트 이름, PPTX 노트 관계, 매번 재처리, 요청별 임시 근거 교체, 파일 변경 폐기, 120개 섹션의 마지막 부분 보존, 350개 이상 파일 페이지 표시, 작업 프로세스 종료·재사용을 검증합니다.
-- 실제 Tk 위젯 통합 테스트: 폴더 탐색, 파일 정보, 문서 요약, 근거 페이지 전환, 코드 요약 차단, 이름·본문 검색, 연속 20회 이동, 스냅샷 수 제한, 요약 재요청 시 재계산, 선택 변경 시 임시 폴더 삭제를 검증합니다.
-- 실제 AI UI 테스트: CPU 모델 생성 도중 Tk 콜백 10회 실행, 취소·모델 해제, 실제 AI 완료, 재요청 시 재계산, AI 오류 시 원문 발췌 fallback을 검증합니다. 합산 2GB Job 제한 아래에서 한국어 Markdown·TXT 및 영문 PDF 추론을 측정한 결과는 `ai-benchmark.json`에 기록합니다.
-- 한국어 4개·영어 3개 합성 사례에서 0.6B와 0.8B를 같은 CPU·컨텍스트·예산으로 비교했습니다. 실제 출력과 fallback 여부는 `quality-comparison.json`, 수동 검토는 `summary-quality.md`에 기록합니다. 키워드 일치를 정확도 점수로 사용하지 않습니다.
-- 현재 방식은 `check_source_summary.py`에서 실제 CPU 모델로 같은 7개 사례를 처리하고, 결과가 원래 파서가 추출한 문장과 공백 외에는 같은지 및 앵커가 일치하는지 검사합니다. 결과는 `source-selection-check.json`에 기록합니다. 숫자·날짜·부정·시제 변경, 다른 문장 결합, 임의의 모델 응답, 잘못된 후보 번호를 차단하는 단위 테스트도 포함합니다.
-- Windows UI 자동화 도구에서는 창 식별이 안정적이지 않아 스크린샷 기반 배치 검증은 완료하지 못했습니다. Tk 앱의 실제 실행과 위젯 동작은 통합 테스트로 확인했습니다.
-- 벤치마크 결과는 `benchmark-results.json`, `benchmark-2gb.json`을 참조합니다. 합성 텍스트 PDF에 대한 근거 충실도와 커버리지 측정이며, 스캔 PDF나 실제 조직 문서에 대한 품질 평가를 대신하지 않습니다.
+## Local verification
 
-## 아직 검증하거나 구현하지 않은 범위
+- Unit tests cover spoofed files, extensionless PDF/Office detection, code/log/configuration disguised as text, malformed XML, XLSX shared strings and sheet names, PPTX note relationships, fresh processing on every request, temporary-workspace replacement, modified-file rejection, late-section retention, paginated file lists, and worker termination and reuse.
+- Real Tk widget checks cover browsing, identity cards, summaries, evidence pagination, disabled summaries for source code, name/content search, 20 rapid navigation requests, bounded snapshot cleanup, recomputation, and workspace deletion on selection changes.
+- The AI UI check runs ten Tk callbacks during real CPU inference, cancels and unloads the model, completes inference, recomputes a repeat request, and falls back to a source excerpt after an injected AI error. It checks the one-result display and source preservation.
+- [AI benchmark](reports/ai-benchmark.json): actual CPU inference on bundled samples under a combined 2 GiB process-tree limit.
+- [Source selection check](reports/source-selection-check.json): seven Korean/English synthetic cases, matched against original parser text and anchors. Tests reject changed numbers, dates, negation, tense, joined sentences, arbitrary prose responses, and invalid candidate IDs.
+- [Full local benchmark](reports/benchmark-results.json) and [2 GiB process test](reports/benchmark-2gb.json): synthetic text PDFs and generated corpora. These are not scanned-PDF or real organizational-document quality evaluations.
+- [Historical experiments](archive/README.md) compare two small models under matching CPU/context budgets. Keyword checks are diagnostics, not semantic accuracy scores.
 
-- 실제 4GB RAM VM/물리 PC 또는 원격 CI 컨테이너 실행. 로컬에서는 프로세스 트리의 4GB/2GB 제한을 실제 적용해 측정합니다. Docker 데몬이 실행되지 않아 로컬 컨테이너 검증은 수행하지 못했습니다.
-- 실제 조직 문서에 대한 사용자의 품질 평가와 더 넓은 코퍼스 비교. 현재 두 소형 모델을 합성 사례에서 비교했습니다. 수치가 보존되어도 누락이나 의미 변화가 남을 수 있습니다.
-- 스캔 문서의 페이지 단위 OCR, 구형 DOC/PPT/XLS/HWP 및 RTF의 안전한 파서.
-- 수식·차트의 완전한 의미 해석, PDF의 표 레이아웃 복원, 모든 파일 형식의 고급 구조/문서 유형 판별. 현재 확인할 수 없는 분류는 Unknown으로 둡니다.
-- 실제 디스크 포화, 실제 대용량 악성 문서의 파서 OOM, 네트워크 드라이브 지연에 대한 통합 장애 주입. 실제 OS 메모리 할당 거부, 워커 강제 종료·취소와 변경 감지는 테스트하며, AI RSS 한도 초과 시 종료도 실제 모델 조정 과정에서 확인했습니다.
+Native Windows screenshot automation was unreliable, so screenshot-based layout verification has not been completed. Real Tk execution and widget behavior are checked by integration scripts.
 
-따라서 AGENTS.md의 Definition of Done 전체를 충족했다고 주장하지 않습니다. 현재 제공물은 실행 가능한 저메모리 문서 탐색기와 그 검증 도구입니다.
+### English interface verification, October 28, 2026
+
+All 31 unit tests and the real Tk browsing/search/summary check passed after the language and file-layout changes. English action buttons fit at both the default 1400 by 900 and minimum 1120 by 740 window sizes. Documentation links resolve, and application/script/test modules compile. Recorded reports were relocated without changing their measured contents.
+
+The AI UI check confirmed the low-memory fallback. Actual model inference was skipped because available system RAM was about 1 GiB, below the 1,280 MiB guard. Earlier AI reports remain historical measurements; this language change does not claim a new inference benchmark.
+
+### DPI and UI scaling
+
+`scripts/ui_scale_smoke.py` exercises real Tk widgets with simulated DPI factors of 1.0, 1.25, 1.5, and 2.0 and application zoom at 100%, 125%, and 150%. It checks visible controls and document text, the sidebar title and every sidebar child at the minimum 1120 by 740 window size, a compact-screen layout, font/row-height consistency, repeated zoom without rounding drift, unchanged summary contents/workspace during zoom, and settings restoration. These simulated factors do not replace visual testing on physical displays with different Windows DPI settings.
+
+The application enables system DPI awareness before creating Tk windows. Named pixel fonts and logical layout metrics share one scale factor; large zoom is limited to the available work area. Reference behavior: [Windows DPI awareness](https://learn.microsoft.com/en-us/windows/win32/hidpi/setting-the-default-dpi-awareness-for-a-process) and [Tk font sizes](https://web.tcl.tk/man/tcl8.7/TkCmd/font.html).
+
+## Outstanding
+
+- An actual 4 GB VM, physical machine, or remotely executed CI container. Local 4 GB/2 GB process limits do not reproduce a complete constrained system. The local Docker daemon was unavailable during earlier validation.
+- User evaluation on real documents and broader corpora. Exact quotations can still omit context or be poorly selected.
+- Page-streamed scanned-document OCR and safe parsers for legacy DOC/PPT/XLS/HWP and RTF.
+- Complete formula/chart interpretation, PDF table-layout recovery, and advanced structural/category detection for every format. Uncertain categories remain `Unknown`.
+- End-to-end injection of real disk exhaustion, parser OOM from large hostile documents, and network-drive delays. Existing checks cover allocation denial, worker termination/cancellation, source modification, and observed AI RSS-budget failure.
+
+The complete Definition of Done in `AGENTS.md` has not been achieved. The project provides a working explorer and reproducible validation tools with these stated limits.

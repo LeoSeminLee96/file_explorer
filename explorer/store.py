@@ -37,7 +37,7 @@ def identity(path):
         for block in iter(lambda: stream.read(65536), b''):
             digest.update(block)
     if before != stamp(path):
-        raise ValueError('처리 중 파일이 변경되었습니다. 다시 선택하세요.')
+        raise ValueError('The file changed during processing. Select it again.')
     data = dict(stable_file_id='%s:%s' % before[:2], content_hash=digest.hexdigest(), file_size=before[2],
                 modified_time=before[3], created_time=before[4], model_id='extractive', model_version='2',
                 prompt_version='evidence-1', summary_mode='section-coverage', parser_version=PARSER_VERSION,

@@ -1,12 +1,10 @@
-# 문서함 · Document Explorer
+# Document Explorer
 
-Windows용 로컬 문서 탐색기입니다. 폴더 탐색, 파일 이름·경로 검색, 문서·코드 본문 검색, 문서 정보, 텍스트 미리보기와 출처가 있는 **소형 CPU AI 요약**을 제공합니다. 탐색과 검색에는 모델이 필요 없으며, 설치한 모델은 AI 요약 요청 시에만 로드합니다. 문서는 외부 서버에 전송하지 않습니다.
+A local document explorer for Windows with folder browsing, filename and path search, document and source-code content search, file details, text previews, and optional small CPU AI. Files stay on your computer. Browsing and search work without a model.
 
-## 실행
+## Run
 
-이 작업 공간에는 가상환경과 PDF 라이브러리를 설치해 두었습니다. **`run.bat`를 두 번 클릭**하면 실행됩니다.
-
-다른 PC에서는 Python 3.9 이상(Tk 포함)을 설치하고 프로젝트 폴더에서 실행합니다.
+Double-click **`run.bat`**. On a new installation, use Python 3.9 or later with Tk and run:
 
 ```powershell
 py -3 -m venv .venv
@@ -14,97 +12,114 @@ py -3 -m venv .venv
 .\.venv\Scripts\python.exe app.py
 ```
 
-특정 폴더부터 열려면 다음과 같이 실행합니다.
+To open a specific folder:
 
 ```powershell
 .\.venv\Scripts\python.exe app.py "D:\Documents"
 ```
 
-PyMuPDF 설치 없이도 탐색, 텍스트 검색, Office 문서 처리는 동작합니다. PDF 미리보기·요약에는 PyMuPDF가 필요합니다.
+PyMuPDF is required for PDF previews and extraction. Browsing, text search, and Office document extraction work without it. Launch with `--no-ai` to select source text without loading a model.
 
-## 사용
+## Use
 
-- **폴더 열기** 또는 주소 입력: 원하는 위치로 이동합니다. 폴더를 두 번 클릭하면 안으로 이동합니다.
-- **이름·경로**: 현재 목록을 필터링합니다. **하위 폴더**를 체크하고 검색하면 하위 위치도 검색합니다.
-- **문서·코드 본문**: 파일 내용을 스트리밍 방식으로 검색합니다. 최대 160개 결과를 표시하며, 파일을 선택하면 검색을 중단하고 미리보기를 엽니다.
-- **문서 후보**: 확장자에 따른 목록 필터입니다. 실제 형식과 요약 가능 여부는 선택 시 별도로 검증합니다.
-- **파일 한 번 클릭**: 전체 경로, 크기, 수정·생성 시간, 실제 형식, 제목, 분량, 언어와 문서 분류를 먼저 표시합니다. 확인할 수 없는 정보는 Unknown으로 표시합니다.
-- **AI 원문 선택**: AI가 중요한 원문 문장을 고르면 앱이 그 문장을 그대로 한 개 표시합니다. 모델이 문장을 새로 작성하지 않습니다. 문장 번호 외의 응답이나 출처가 맞지 않는 결과는 거부하고 원문 문장으로 대체합니다. 파일 정보와 출처는 별도로 유지하며, 아래 화살표로 섹션별 원문 근거를 확인합니다.
-- **Esc / 중단**: 파서·검색·요약을 중단합니다. 다른 파일을 선택하면 이전 문서 작업을 종료합니다.
+- **Open folder** or enter a path to navigate. Double-click a folder to open it.
+- **Name / path** filters the file list. Enable **Subfolders** to search recursively.
+- **File contents** streams document and source-code content search. Results are limited to 160 rows; selecting a file stops the search and opens its preview.
+- **Documents** filters candidate extensions. Actual format and parser availability are validated when a file is selected.
+- Select a file to see its full path, size, modified and created times, actual format, title, length, language, and category. Unavailable details appear as `Unknown`.
+- **AI excerpt** asks the model to select one source sentence. The app displays that sentence verbatim, with its source location. **Lightweight summary** selects a sentence using deterministic ranking when AI is unavailable.
+- Use the arrows below a completed result to inspect evidence from individual sections.
+- **Cancel** or `Esc` stops parsing, search, or AI. Selecting another file cancels the previous document job.
 
-단축키: `Ctrl+F` 검색, `Ctrl+L` 주소, `Alt+←` 뒤로, `Alt+↑` 상위 폴더, `F5` 새로고침.
+Shortcuts: `Ctrl+F` search, `Ctrl+L` address, `Alt+Left` back, `Alt+Up` parent folder, `F5` refresh.
 
-## 요약은 캐시하지 않습니다
+**UI scale** in the top-right corner controls text and layout together. `Auto` follows the Windows startup DPI; 90%, 100%, 110%, 125%, and 150% adjust that size. Use `Ctrl++` / `Ctrl+-` to change zoom or `Ctrl+0` to restore Auto. The preference is saved. Fonts, spacing, controls, and table rows scale together. If the requested size exceeds the available screen, `UI scale (fit)` indicates an automatic fit limit. Narrow layouts hide the sidebar; the toolbar's **Open** button and address bar remain available.
 
-사용자의 최신 지시에 따라 요약과 문서 추출 결과의 영구 캐시를 제거했습니다. 같은 문서를 다시 요약해도 반드시 원문을 다시 읽습니다. 기존 버전의 `.data/documents.db`도 앱 시작 시 제거합니다.
+The interface, messages, documentation, and bundled browsing samples are in English. Korean document detection, search, and source preservation remain supported. Korean text in regression fixtures, language heuristics, and recorded benchmark outputs is intentional.
 
-대용량 문서의 작업 중 근거는 현재 선택에 연결된 임시 SQLite 파일에 기록합니다. 이는 이전 요청의 결과를 재사용하는 캐시가 아닙니다. 파일 전환, 요약 재요청, 취소, 정상 종료 시 삭제합니다. 현재 화면에 보이는 미리보기·요약만 메모리에 유지합니다. 파일 목록용 메타데이터 인덱스와 마지막 폴더 설정은 별도로 유지합니다.
+## Supported formats
 
-## 지원 형식
-
-| 형식 | 미리보기 / 경량 요약 | 처리 방식 |
+| Format | Preview / summary | Extraction |
 | --- | --- | --- |
-| PDF | 지원 | 시그니처·파서 검증, 페이지 단위 추출 |
-| DOCX | 지원 | 제목 스타일, 문단, 표 내부 문단 |
-| PPTX | 지원 | 슬라이드, 관계 파일로 연결한 발표자 노트·차트 텍스트 |
-| XLSX | 지원 | 실제 시트 이름, 범위, 헤더, 수식 개수, 숫자 통계; shared strings는 임시 디스크 DB |
-| HWPX | 지원 | 컨테이너의 section XML, 문단 |
-| ODT / ODP / ODS | 지원 | 제목·문단·슬라이드·시트 구조 |
-| TXT / Markdown | 자연어로 판별될 때 지원 | 경량 휴리스틱으로 코드·설정·로그·덤프 제외 |
-| DOC / PPT / XLS / HWP / RTF | 요약 불가 | 안전한 파서가 없어 변환 안내 |
-| 소스코드 / 설정 | 검색·텍스트 미리보기 | 요약 비활성화 |
-| 실행 파일 / 이미지 / 기타 바이너리 | 메타데이터 | 요약 비활성화 |
+| PDF | Supported | Signature and parser validation; page-by-page text |
+| DOCX | Supported | Heading styles, paragraphs, table paragraphs |
+| PPTX | Supported | Slides, related speaker notes, chart text |
+| XLSX | Supported | Sheet names, ranges, headers, formula counts, numeric statistics; disk-backed shared strings |
+| HWPX | Supported | Section XML and paragraphs |
+| ODT / ODP / ODS | Supported | Headings, paragraphs, slides, sheets |
+| TXT / Markdown | Natural-language documents only | Heuristics exclude code, configuration, logs, and dumps |
+| DOC / PPT / XLS / HWP / RTF | Summary unavailable | Convert to a supported format; no safe parser is included |
+| Source code / configuration | Search and text preview | Summary disabled |
+| Executables / images / other binary files | Metadata | Summary disabled |
 
-스캔 PDF의 OCR과 암호화 문서 해제는 포함하지 않았습니다. AI 원문 선택과 경량 요약은 모두 원문 발췌입니다. AI 원문 선택은 모델이 문장을 고르고, 경량 요약은 프로그램의 순위 규칙으로 고릅니다. XLSX는 셀·범위·수식에서 구조적으로 추출한 정보를 선택합니다.
+Scanned-PDF OCR and encrypted-document unlocking are not included. Spreadsheet results select programmatically extracted information from cells, ranges, and formulas.
 
-## 소형 CPU 모델
+## Optional CPU model
 
-현재 프로젝트에는 **Qwen3 0.6B / Q4_K_M** 모델과 CPU 전용 llama.cpp를 설치했습니다. 모델 파일은 약 **378MiB**입니다. 공식 [Qwen 배포본](https://huggingface.co/Qwen/Qwen3-0.6B-GGUF)의 Q8_0 파일을 검증한 후 로컬에서 Q4_K_M으로 재양자화했습니다. 원본 학습 가중치에서 직접 양자화한 모델과 품질이 완전히 같다고 가정하지 않습니다.
-
-- CPU 전용, GPU offload 0, 스레드 2개, 단일 추론 슬롯, 낮은 프로세스 우선순위로 실행합니다.
-- 컨텍스트 2,048토큰, 실제 토크나이저로 확인한 입력 최대 1,400토큰입니다. 출력은 최대 8토큰의 문장 번호이며 문법도 유효한 번호로 제한합니다. 표시 문장은 AI 출력에서 읽지 않고 후보 원문에서 가져옵니다.
-- 문서 전체를 모델에 넣지 않습니다. 스트리밍 추출 → 섹션별 대표 근거 → 주요 결정·결론과 관련 보충 근거 → 200자 이하의 원문 후보 최대 12개 → AI가 번호 하나 선택 → 앱이 원문 문장 표시로 처리합니다. 모든 섹션의 원문 근거는 별도 임시 DB에서 확인할 수 있습니다.
-- 모델에 내장된 대화 템플릿을 사용하고 Thinking은 API 설정으로 비활성화합니다. 입력 한도를 넘으면 후보 하나를 통째로 제외하며, 문장이나 부정·조건 절을 임의로 자르지 않습니다. 짧은 원문 후보가 없으면 생성하지 않고 처리 불가를 표시합니다.
-- mmap, Q8 KV, weight repacking 비활성화로 메모리를 줄입니다. 작업 프로세스 트리에 768MiB commit/주소공간 한도를 적용하며, 모델과 제어 프로세스의 합산 RSS도 감시하여 768MiB 초과 시 중단합니다. 가용 RAM이 1,280MiB 미만이면 모델을 실행하지 않습니다.
-- 런타임은 인증 키가 있는 임시 `127.0.0.1` 포트에서만 동작합니다. 외부 접속·웹 UI·모델 자동 다운로드·프롬프트 재사용 캐시는 비활성화합니다. 완료·취소·파일 전환 시 프로세스를 종료하여 모델을 해제합니다.
-- 결과는 캐시하지 않습니다. 다시 요약하면 추출과 AI 추론을 모두 다시 실행합니다. 설치된 **모델 가중치와 실행 파일**은 프로그램 자산으로 보관합니다.
-
-다른 PC에서 AI 기능을 설치하려면 아래 명령을 명시적으로 실행합니다. 약 640MB의 공식 모델을 다운로드하여 약 400MB의 배포 모델로 변환합니다. 다운로드할 때만 인터넷이 필요합니다. 실행 파일과 모델 원본의 SHA256을 검증하며, 파일은 프로젝트 `.data/ai` 안에만 설치합니다.
+Install the model explicitly:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/setup_ai.py
 ```
 
-AI를 끄고 실행하려면 `python app.py --no-ai`를 사용합니다. 모델 교체 연결점은 `SummaryModel` 프로토콜과 `LlamaCppModel` 어댑터이며, 실제 설치 설정은 `.data/model.json`입니다.
+The installer downloads an official [Qwen3 0.6B GGUF](https://huggingface.co/Qwen/Qwen3-0.6B-GGUF) Q8_0 model, verifies source and runtime SHA256 hashes, and requantizes it locally to **Q4_K_M** using CPU-only llama.cpp. The installed model is approximately **378 MiB**. Requantization is not assumed to match direct quantization from original training weights. Installation needs internet access; inference runs locally. Assets are stored in `.data/ai`, with configuration in `.data/model.json`.
 
-이 방식은 **새 사실을 생성하는 자유 서술 요약이 아닙니다**. 모델이 원문 후보의 번호만 고르므로, 모델이 바꿔 쓴 수치·이름·부정·시제를 표시하는 경로를 제거합니다. 줄바꿈 등 공백만 정리하며 나머지 문구와 출처는 유지합니다. 원문 자체의 사실 오류, 문서 전체를 대표하지 못하는 선택, 문장 밖의 맥락 누락까지 보장하지는 않습니다. 실제 파서 원문과 대조한 결과는 [출처 일치 검증](docs/source-selection-check.json)에 기록합니다. 로컬 측정은 실제 4GB 기기 검증을 대신하지 않습니다.
+- Two CPU threads, one inference slot, no GPU offload, low process priority.
+- Fixed 2,048-token context; tokenizer-verified input of at most 1,400 tokens.
+- Streaming extraction selects structural evidence and up to 12 complete source sentences, each at most 200 characters. The model returns one sentence ID, constrained by grammar and an eight-token output budget. Display text comes from the source candidate, never the model response.
+- Native chat template with thinking disabled. Oversized input drops whole candidates. Sentences, conditions, and negations are never cropped to fit. Documents without suitable short sentences report an explicit limitation.
+- mmap loading, Q8 KV cache, and disabled weight repacking. The worker process tree has a 768 MiB commit/address-space ceiling, with a separate sampled combined-RSS watchdog. AI is skipped below 1,280 MiB of available RAM.
+- A private authenticated `127.0.0.1` endpoint, no web UI, automatic download, or prompt reuse. The model is unloaded on completion, cancellation, or file selection changes.
 
-이전 자유 생성 방식에서는 0.6B와 Qwen3.5 0.8B Q4_0을 비교해도 안정적인 품질을 확보하지 못했습니다. 당시 [비교 결과](docs/quality-comparison.json)와 [수동 품질 검토](docs/summary-quality.md)는 실패 사례 기록으로 유지합니다. 현재 기본 모델은 0.6B이며 역할을 원문 문장 선택으로 제한했습니다. 키워드 일치를 의미 정확도 점수로 사용하지 않습니다.
+This is **AI-assisted extractive selection**. It prevents model-written changes to numbers, names, negation, and tense from reaching the display. Only whitespace is normalized. It does not establish that the source is true, that the sentence represents the entire document, or that surrounding context is unnecessary. See the [source preservation report](docs/reports/source-selection-check.json) and [quality review](docs/summary-quality.md).
 
-## 저메모리 구조
+`SummaryModel` and `LlamaCppModel` provide the adapter boundary. `scripts/setup_candidate.py` installs an optional comparison model; it does not replace the default. Earlier free-generation trials were insufficiently reliable and are preserved in [the experiment archive](docs/archive/README.md).
 
-- 시작 시 실제 RAM과 컨테이너 한도를 감지하여 ULTRA LOW / LOW / NORMAL / HIGH 프로필을 선택합니다.
-- 파일 목록과 재귀 탐색 대기열은 SQLite에 기록합니다. Tk에는 최대 160개 행만 렌더링합니다. 목록 스캔 스레드는 1개이며 새 이동은 대기 요청을 덮어씁니다.
-- 파서 프로세스는 동시에 1개만, 요청할 때 실행합니다. Windows Job Object / Linux RLIMIT_AS로 기본 256MB(가용 RAM 부족 시 128MB) 메모리 상한을 실제 적용합니다. 상한 설정 실패 시 파서를 실행하지 않습니다.
-- PDF는 페이지 단위, XML은 iterparse로 처리하며, 텍스트 읽기 버퍼는 16KB입니다. 큰 ZIP 중앙 디렉터리와 암호화·과대 항목을 제한합니다.
-- 미리보기는 24,000자, 요약의 현재 추출 작업 집합은 고정 크기입니다. 각 섹션의 대표 근거는 임시 DB에 저장합니다. 화면 개요에는 앞·중간·뒤에서 고르게 최대 12개 섹션을 표시합니다.
-- 워커의 OOM·파일 손상·강제 종료는 UI 프로세스와 분리됩니다. AI는 명시적 요청 시에만 실행하며 임베딩과 자동 백그라운드 요약은 실행하지 않습니다.
+## No summary cache
 
-`AGENTS.md`의 전체 요구사항에 대한 구현·검증 범위는 [검증 문서](docs/validation.md)에 기록했습니다.
+Every request rereads the source and reruns extraction and selection. Summary and extraction results are not reused across requests. Legacy `.data/documents.db` files are removed on startup.
 
-## 검증
+Large-document evidence is held in a temporary SQLite workspace for the current selection. It is deleted on reselection, cancellation, another summary request, or normal exit. File-list metadata and the last folder setting persist separately. Model weights and runtime executables are installed application assets.
+
+## Memory design
+
+Explorer/search take priority over preview, parsing, and AI. Startup detects physical and container memory limits and selects an ULTRA LOW, LOW, NORMAL, or HIGH profile.
+
+File listings and recursive directory queues are disk-backed. The UI displays at most 160 rows. One scan thread keeps only the latest navigation request. One isolated parser runs on demand, with an OS-enforced 256 MiB budget, reduced to 128 MiB under memory pressure. If the limit cannot be applied, parsing stops safely.
+
+PDF extraction is page-based, XML uses streaming parsing, and text read buffers are 16 KiB. Oversized ZIP directories and encrypted or oversized entries are rejected. Previews are capped at 24,000 characters. Section evidence remains on disk; the overview shows up to 12 representative sections selected for importance and document coverage. Parser and AI failures are isolated from the UI. No embedding model or automatic background summarization is started.
+
+## Project layout
+
+```text
+app.py                    Tk desktop interface
+explorer/                 Detection, parsers, search, summaries, worker isolation
+scripts/                  Setup, UI checks, and benchmark entry points
+sample_documents/         English browsing examples
+tests/                    Unit and failure tests
+tests/fixtures/korean/    Korean regression documents
+docs/                     Architecture, validation, and quality notes
+docs/reports/             Recorded validation and performance results
+docs/archive/             Historical model experiments
+.github/workflows/        Constrained-memory CI definition
+.data/                    Ignored local models, settings, indexes, generated fixtures
+```
+
+See the [script guide](scripts/README.md), [validation scope](docs/validation.md), and [architecture requirements](AGENTS.md).
+
+## Verification
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -v
 .\.venv\Scripts\python.exe scripts/ui_smoke.py
+.\.venv\Scripts\python.exe scripts/ui_scale_smoke.py
 .\.venv\Scripts\python.exe scripts/ui_ai_smoke.py
 .\.venv\Scripts\python.exe scripts/benchmark_ai.py
 .\.venv\Scripts\python.exe scripts/check_source_summary.py
-.\.venv\Scripts\python.exe scripts/compare_quality.py
 .\.venv\Scripts\python.exe scripts/benchmark.py --limit-mb 4096
-.\.venv\Scripts\python.exe scripts/benchmark.py --quick --limit-mb 2048 --output docs/benchmark-2gb.json
+.\.venv\Scripts\python.exe scripts/benchmark.py --quick --limit-mb 2048 --output docs/reports/benchmark-2gb.json
 ```
 
-벤치마크는 1 / 10 / 100 / 500 / 1,000 / 5,000 페이지 PDF와 100 / 10,000 / 100,000 파일 코퍼스를 생성합니다. 자료는 `.data/benchmarks`에 보관하며 요약 작업 데이터는 임시 폴더에서 삭제합니다. 결과에는 최초·전체 요약 시간, 재요청 처리 시간, RSS, CPU, 프로세스 읽기 바이트, 숫자 정확성·근거 일치·섹션 커버리지를 기록합니다. 프로세스 읽기 바이트에는 OS 파일 캐시에 의해 처리된 I/O도 포함될 수 있습니다.
+AI checks require an installed model. The full benchmark generates 1, 10, 100, 500, 1,000, and 5,000-page PDFs and 100, 10,000, and 100,000-file corpora under `.data/benchmarks`. Reports record time to first and complete summary, repeat-request processing time, RSS, CPU time, process read bytes, numeric preservation, evidence matches, and section coverage. Process reads can include I/O served from the OS cache.
 
-로컬 Windows의 Job Object 제한은 **실제 4GB RAM 컴퓨터 검증을 대체하지 않습니다**. [CI 워크플로](.github/workflows/constrained.yml)는 컨테이너 전체 메모리와 swap 합계를 4GB로 제한하도록 구성했으며, 원격 실행은 아직 하지 않았습니다.
+Local process-tree limits **do not replace testing an actual 4 GB system**. The [CI workflow](.github/workflows/constrained.yml) caps container memory and total memory-plus-swap at 4 GB; its remote run has not yet been completed. Full compatibility is not claimed.

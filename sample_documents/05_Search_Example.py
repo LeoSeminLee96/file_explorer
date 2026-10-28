@@ -1,4 +1,4 @@
-"""검색과 미리보기 전용 예제. 소스코드는 문서 요약에 들어가지 않습니다."""
+"""Search and preview example. Source code never enters document summarization."""
 
 
 def find_document(filename, query):
